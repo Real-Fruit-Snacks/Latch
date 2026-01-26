@@ -1,0 +1,26 @@
+# Output directories
+SurveyOutput/
+*.zip
+
+# Downloaded tools
+*.exe
+!Survey.ps1
+
+# Temporary files
+*.tmp
+*.log
+.downloads/
+
+# OS generated
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test files
+test/
