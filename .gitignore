@@ -1,10 +1,12 @@
 # Output directories
-SurveyOutput/
+LatchOutput/
 *.zip
 
 # Downloaded tools
 *.exe
-!Survey.ps1
+
+# Claude Code local config
+CLAUDE.md
 
 # Temporary files
 *.tmp
