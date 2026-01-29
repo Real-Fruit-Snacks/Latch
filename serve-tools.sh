@@ -647,9 +647,13 @@ HTTPServer(('0.0.0.0', $UPLOAD_PORT), UploadHandler).serve_forever()
 
 # Cleanup function to kill upload server on exit
 cleanup() {
+    echo ""
     if [[ -n "$UPLOAD_SERVER_PID" ]]; then
         kill "$UPLOAD_SERVER_PID" 2>/dev/null
+        wait "$UPLOAD_SERVER_PID" 2>/dev/null
+        echo -e "${GREEN}[+] Upload server stopped${NC}"
     fi
+    echo -e "${GREEN}[+] Servers shut down cleanly${NC}"
 }
 trap cleanup EXIT INT TERM
 
